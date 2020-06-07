@@ -16,7 +16,7 @@
 
     <item
         android:id="@+id/home"
-        android:title=""
+        android:title="@string/home_button"
         android:icon="@drawable/ic_home"
         app:showAsAction="ifRoom"
 

@@ -5,6 +5,7 @@ import android.os.Debug;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
@@ -83,6 +84,24 @@ public class MainFragment extends Fragment {
         inflater.inflate(R.menu.main_fragment,menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.home:
+                goHome();
+
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+
+
+
+    }
+
     private class MyBrowser extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -98,4 +117,10 @@ public class MainFragment extends Fragment {
         }
     }
 
+
+
+    private void goHome(){
+        mWebView.loadUrl("https://www.google.com");
+        mEditText.setText(mWebView.getUrl());
+    }
 }
