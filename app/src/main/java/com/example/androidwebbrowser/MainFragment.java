@@ -24,6 +24,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import com.example.androidwebbrowser.models.Favorite;
+
 public class MainFragment extends Fragment {
 
 
@@ -32,6 +34,10 @@ public class MainFragment extends Fragment {
     private WebView mWebView;
     private EditText mEditText;
     private ProgressBar mProgressBar;
+    private boolean mIsFavorite;
+    private BrowserLab mBrowserLab;
+    private MenuItem mFavoriteItem;
+
 
     @Nullable
     @Override
@@ -78,7 +84,7 @@ public class MainFragment extends Fragment {
 
         mProgressBar=view.findViewById(R.id.progressBar);
 
-
+        mBrowserLab= BrowserLab.get(getContext());
 
 
 
@@ -97,6 +103,9 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.main_fragment,menu);
+        mFavoriteItem = menu.findItem(R.id.add_or_remove_favorites);
+
+
     }
 
     @Override
@@ -112,6 +121,20 @@ public class MainFragment extends Fragment {
             return  true;
             case R.id.forward:
                 goForward();
+                return true;
+            case R.id.add_or_remove_favorites:
+
+                if(!mIsFavorite){
+                    mBrowserLab.addFavorite(new Favorite(mWebView.getUrl()));
+                    mIsFavorite=true;
+                    mFavoriteItem.setIcon(R.drawable.ic_favorite_on);
+                }else{
+                    mBrowserLab.removeFavorite(new Favorite(mWebView.getUrl()));
+                    mFavoriteItem.setIcon(R.drawable.ic_favorite_off);
+                    mIsFavorite=false;
+                }
+
+
                 return true;
 
             default:
@@ -139,12 +162,26 @@ public class MainFragment extends Fragment {
             super.onPageStarted(view, url, favicon);
             mEditText.setText(url);
             mProgressBar.setVisibility(View.VISIBLE);
+
+            mIsFavorite = mBrowserLab.isFavorite(url);
+
+            if(mIsFavorite){
+
+            mFavoriteItem.setIcon(R.drawable.ic_favorite_on);
+            }else{
+                mFavoriteItem.setIcon(R.drawable.ic_favorite_off);
+            }
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             mProgressBar.setVisibility(View.GONE);
+
+
+
+
+
         }
     }
 
