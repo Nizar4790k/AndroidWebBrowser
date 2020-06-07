@@ -90,9 +90,11 @@ public class MainFragment extends Fragment {
         switch (item.getItemId()){
             case R.id.home:
                 goHome();
-
-
                 return true;
+            case R.id.reload:
+            reload();
+
+
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -118,6 +120,9 @@ public class MainFragment extends Fragment {
     }
 
 
+    private void reload(){
+        mWebView.loadUrl(mWebView.getUrl());
+    }
 
     private void goHome(){
         mWebView.loadUrl("https://www.google.com");
