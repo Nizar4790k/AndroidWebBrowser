@@ -20,7 +20,7 @@ public class MainActivity extends SingleFragmentActivity{
 
     @Override
     public boolean onSupportNavigateUp() {
-        Toast.makeText(this,"Getting back",Toast.LENGTH_SHORT).show();
+        mFragment.goBack();
         return true;
     }
 
