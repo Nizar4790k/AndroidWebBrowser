@@ -60,7 +60,7 @@ public class MainFragment extends Fragment {
         webSettings.setJavaScriptEnabled(true);
         mWebView.loadUrl("https://www.google.com");
 
-        EditText mEditText = view.findViewById(R.id.edit_text);
+        mEditText = view.findViewById(R.id.edit_text);
         mEditText.setText(mWebView.getUrl());
 
 
@@ -94,6 +94,7 @@ public class MainFragment extends Fragment {
     void goBack(){
         if (mWebView.canGoBack()){
             mWebView.goBack();
+            mEditText.setText(mWebView.getUrl());
         }
     }
 
