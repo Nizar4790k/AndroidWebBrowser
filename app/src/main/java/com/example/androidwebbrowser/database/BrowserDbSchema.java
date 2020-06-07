@@ -8,6 +8,7 @@ public class BrowserDbSchema  {
     public static final class Cols{
 
         public static final String URL="url";
+        public static final String TITLE="title";
     }
 
     }

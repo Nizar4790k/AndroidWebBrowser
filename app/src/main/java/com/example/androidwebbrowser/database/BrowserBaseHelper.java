@@ -12,7 +12,9 @@ public class BrowserBaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL("create table "+BrowserDbSchema.FavoriteTable.NAME+
-                "("+BrowserDbSchema.FavoriteTable.Cols.URL+" text primary key )");
+                "("+BrowserDbSchema.FavoriteTable.Cols.URL+" text primary key,"+
+                    BrowserDbSchema.FavoriteTable.Cols.TITLE+")");
+
 
 
 

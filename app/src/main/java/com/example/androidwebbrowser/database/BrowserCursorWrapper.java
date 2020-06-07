@@ -3,7 +3,7 @@ package com.example.androidwebbrowser.database;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
-import com.example.androidwebbrowser.models.Favorite;
+import com.example.androidwebbrowser.models.WebBrowserHistoryItem;
 
 public class BrowserCursorWrapper extends CursorWrapper {
     /**
@@ -15,9 +15,11 @@ public class BrowserCursorWrapper extends CursorWrapper {
         super(cursor);
     }
 
-    public Favorite getFavorite(){
+    public WebBrowserHistoryItem getFavorite(){
         String url = getString(getColumnIndex(BrowserDbSchema.FavoriteTable.Cols.URL));
+        String title = getString(getColumnIndex(BrowserDbSchema.FavoriteTable.Cols.TITLE));
 
-        return new Favorite(url);
+
+        return new WebBrowserHistoryItem(url,title);
     }
 }

@@ -4,12 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.Browser;
 
 import com.example.androidwebbrowser.database.BrowserBaseHelper;
 import com.example.androidwebbrowser.database.BrowserCursorWrapper;
 import com.example.androidwebbrowser.database.BrowserDbSchema;
-import com.example.androidwebbrowser.models.Favorite;
+import com.example.androidwebbrowser.models.WebBrowserHistoryItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,32 +32,32 @@ public class BrowserLab {
         mDatabase = new BrowserBaseHelper(mContext).getWritableDatabase();
     }
 
-    public void addFavorite(Favorite favorite){
-        ContentValues values = getFavoriteContentValues(favorite);
+    public void addFavorite(WebBrowserHistoryItem webBrowserHistoryItem){
+        ContentValues values = getFavoriteContentValues(webBrowserHistoryItem);
         mDatabase.insert(BrowserDbSchema.FavoriteTable.NAME,null,values);
     }
 
 
-    private static ContentValues getFavoriteContentValues(Favorite favorite){
+    private static ContentValues getFavoriteContentValues(WebBrowserHistoryItem webBrowserHistoryItem){
         ContentValues values= new ContentValues();
 
-        values.put(BrowserDbSchema.FavoriteTable.Cols.URL,favorite.getUrl());
-
+        values.put(BrowserDbSchema.FavoriteTable.Cols.URL, webBrowserHistoryItem.getUrl());
+        values.put(BrowserDbSchema.FavoriteTable.Cols.TITLE,webBrowserHistoryItem.getTitle());
         return values;
     }
 
 
 
-    public  List<Favorite> getFavorites(){
+    public  List<WebBrowserHistoryItem> getFavorites(){
 
-        List<Favorite> favorites = new ArrayList<>();
+        List<WebBrowserHistoryItem> webBrowserHistoryItems = new ArrayList<>();
 
         BrowserCursorWrapper cursor = queryFavorites(null,null);
 
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()){
-                favorites.add(cursor.getFavorite());
+                webBrowserHistoryItems.add(cursor.getFavorite());
                 cursor.moveToNext();
             }
         } finally {
@@ -69,7 +68,7 @@ public class BrowserLab {
 
 
 
-        return  favorites;
+        return webBrowserHistoryItems;
     }
 
     public boolean isFavorite(String url){
@@ -98,7 +97,7 @@ public class BrowserLab {
         return new BrowserCursorWrapper(cursor);
     }
 
-    public void removeFavorite(Favorite f){
+    public void removeFavorite(WebBrowserHistoryItem f){
 
 
 

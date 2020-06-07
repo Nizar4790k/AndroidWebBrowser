@@ -6,5 +6,6 @@
     <string name="forward_button">Forward</string>
     <string name="history_button">History</string>
     <string name="share_button">Share</string>
-    <string name="favorites_list_button">Favorite List</string>
+    <string name="favorites_list">Favorite List</string>
+    <string name="empty_favorites">There are no favorites sites</string>
 </resources>

@@ -43,7 +43,7 @@
 
     <item
         android:id="@+id/favorite_list"
-        android:title="@string/favorites_list_button"
+        android:title="@string/favorites_list"
 
         app:showAsAction="ifRoom"
 

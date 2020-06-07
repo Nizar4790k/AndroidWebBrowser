@@ -1,8 +1,8 @@
 package com.example.androidwebbrowser;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Debug;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
+import android.webkit.WebHistoryItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -24,7 +25,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-import com.example.androidwebbrowser.models.Favorite;
+import com.example.androidwebbrowser.models.WebBrowserHistoryItem;
 
 public class MainFragment extends Fragment {
 
@@ -37,7 +38,7 @@ public class MainFragment extends Fragment {
     private boolean mIsFavorite;
     private BrowserLab mBrowserLab;
     private MenuItem mFavoriteItem;
-
+    private Menu mMenu;
 
     @Nullable
     @Override
@@ -62,7 +63,7 @@ public class MainFragment extends Fragment {
         ActionBar actionBar = activity.getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
-        setHasOptionsMenu(true);
+
 
         mWebView = view.findViewById(R.id.web_view);
         mWebView.setWebViewClient(new MyBrowser());
@@ -97,13 +98,14 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.main_fragment,menu);
-        mFavoriteItem = menu.findItem(R.id.add_or_remove_favorites);
+        mFavoriteItem=menu.findItem(R.id.add_or_remove_favorites);
 
 
     }
@@ -124,15 +126,25 @@ public class MainFragment extends Fragment {
                 return true;
             case R.id.add_or_remove_favorites:
 
+                WebHistoryItem webHistoryItem = mWebView.copyBackForwardList().getCurrentItem();
+
                 if(!mIsFavorite){
-                    mBrowserLab.addFavorite(new Favorite(mWebView.getUrl()));
+                    mBrowserLab.addFavorite(new WebBrowserHistoryItem(
+                            webHistoryItem.getUrl(),
+                            webHistoryItem.getTitle()));
                     mIsFavorite=true;
                     mFavoriteItem.setIcon(R.drawable.ic_favorite_on);
                 }else{
-                    mBrowserLab.removeFavorite(new Favorite(mWebView.getUrl()));
+                    mBrowserLab.removeFavorite(new WebBrowserHistoryItem(mWebView.getUrl()));
                     mFavoriteItem.setIcon(R.drawable.ic_favorite_off);
                     mIsFavorite=false;
                 }
+
+                return true;
+
+            case R.id.favorite_list:
+                Intent intent = new Intent(getContext(),FavoriteListActivity.class);
+                startActivity(intent);
 
 
                 return true;
@@ -148,13 +160,13 @@ public class MainFragment extends Fragment {
 
     private class MyBrowser extends WebViewClient {
 
-       /*
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
             return true;
         }
-        */
+
 
 
         @Override
@@ -165,12 +177,7 @@ public class MainFragment extends Fragment {
 
             mIsFavorite = mBrowserLab.isFavorite(url);
 
-            if(mIsFavorite){
 
-            mFavoriteItem.setIcon(R.drawable.ic_favorite_on);
-            }else{
-                mFavoriteItem.setIcon(R.drawable.ic_favorite_off);
-            }
         }
 
         @Override
@@ -178,6 +185,7 @@ public class MainFragment extends Fragment {
             super.onPageFinished(view, url);
             mProgressBar.setVisibility(View.GONE);
 
+            checkFavorite(url);
 
 
 
@@ -210,5 +218,29 @@ public class MainFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
 
+        if(mFavoriteItem!=null){
+            checkFavorite(mWebView.getUrl());
+
+        }
+
+
+
+
+
+    }
+
+    public void checkFavorite(String url){
+        mIsFavorite = BrowserLab.get(getContext()).isFavorite(url);
+
+        if(mIsFavorite){
+
+            mFavoriteItem.setIcon(R.drawable.ic_favorite_on);
+        }else{
+            mFavoriteItem.setIcon(R.drawable.ic_favorite_off);
+        }
+    }
 }
