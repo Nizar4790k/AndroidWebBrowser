@@ -7,7 +7,7 @@
 
     <item
         android:id="@+id/reload"
-        android:title=""
+        android:title="@string/reload_button"
         android:icon="@drawable/ic_reload"
         app:showAsAction="ifRoom"
 
@@ -22,31 +22,51 @@
 
         />
 
-    <item
-        android:id="@+id/favorite"
-        android:title=""
-        android:icon="@drawable/ic_favorite"
-        app:showAsAction="ifRoom"
 
-        />
 
 
     <item
         android:id="@+id/forward"
-        android:title=""
+        android:title="@string/forward_button"
         android:icon="@drawable/ic_forward"
         app:showAsAction="ifRoom"
 
         />
 
     <item
-        android:id="@+id/history"
-        android:title=""
-        android:icon="@drawable/ic_reload"
+        android:id="@+id/favorite"
+        android:title="@string/favorite_button"
+
         app:showAsAction="ifRoom"
 
         />
 
+    <item
+        android:id="@+id/favorite_list"
+        android:title="@string/favorites_list_button"
+        android:icon="@drawable/ic_favorite"
+        app:showAsAction="ifRoom"
+
+        />
+
+
+
+
+    <item
+        android:id="@+id/history"
+        android:title="@string/history_button"
+        android:icon="@drawable/ic_history"
+        app:showAsAction="ifRoom"
+
+        />
+
+    <item
+        android:id="@+id/share"
+        android:title="@string/share_button"
+        android:icon="@drawable/ic_share"
+        app:showAsAction="ifRoom"
+
+        />
 
 
 

@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">AndroidWebBrowser</string>
     <string name="home_button">Home</string>
+    <string name="reload_button">Reload</string>
+    <string name="favorite_button">Add to Favorites</string>
+    <string name="forward_button">Forward</string>
+    <string name="history_button">History</string>
+    <string name="share_button">Share</string>
+    <string name="favorites_list_button">Favorite List</string>
 </resources>
