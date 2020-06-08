@@ -175,6 +175,10 @@ public class BrowserLab {
 
     }
 
+    public void  removeAllHistory(){
+        mDatabase.delete(BrowserDbSchema.HistoryTable.NAME,null,null);
+    }
+
 
 
 }

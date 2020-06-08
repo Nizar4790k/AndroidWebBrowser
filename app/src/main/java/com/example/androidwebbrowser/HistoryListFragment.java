@@ -1,7 +1,12 @@
 package com.example.androidwebbrowser;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebHistoryItem;
@@ -12,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,14 +25,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidwebbrowser.models.WebBrowserHistoryItem;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
 
 public class HistoryListFragment extends Fragment {
 
 
     private RecyclerView mHistoryRecyclerView;
     private HistoryAdapter mHistoryAdapter;
+    private BrowserLab mBrowserLab;
 
     @Nullable
     @Override
@@ -35,6 +46,7 @@ public class HistoryListFragment extends Fragment {
 
         mHistoryRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mHistoryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mHistoryRecyclerView.addItemDecoration(new SimpleItemDecorator(15));
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallBack());
         itemTouchHelper.attachToRecyclerView(mHistoryRecyclerView);
@@ -43,6 +55,7 @@ public class HistoryListFragment extends Fragment {
         setActionBar(toolbar);
         updateUI();
 
+        mBrowserLab = BrowserLab.get(getContext());
 
 
         return view;
@@ -82,6 +95,7 @@ public class HistoryListFragment extends Fragment {
 
 
             return;
+
 
         } else {
             mHistoryAdapter.setFavorites(historyItems);
@@ -151,9 +165,21 @@ public class HistoryListFragment extends Fragment {
 
         public void bind (WebBrowserHistoryItem webBrowserHistoryItem){
             mWebBrowserHistoryItem = webBrowserHistoryItem;
-            mTvTitle.setText(webBrowserHistoryItem.getTitle());
-            mTvUrl.setText(webBrowserHistoryItem.getUrl());
-            mTvDate.setText(webBrowserHistoryItem.getDate().toString());
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                mTvTitle.setText(Html.fromHtml("<strong>"+webBrowserHistoryItem.getTitle()+"</strong>", FROM_HTML_MODE_LEGACY));
+                mTvUrl.setText(Html.fromHtml("<u>"+webBrowserHistoryItem.getUrl()+"</u>",FROM_HTML_MODE_LEGACY));
+            }else{
+                mTvTitle.setText(Html.fromHtml("<strong>"+webBrowserHistoryItem.getTitle()+"</strong>"));
+                mTvUrl.setText(Html.fromHtml("<u>"+webBrowserHistoryItem.getUrl()+"</u>"));
+            }
+
+            String formatedDate=dateFormatted(
+                        webBrowserHistoryItem.getDate(),
+                    "yyyy-MM-dd HH:mm:ss");
+
+            mTvDate.setText(formatedDate);
         }
 
 
@@ -209,7 +235,34 @@ public class HistoryListFragment extends Fragment {
         actionBar.setTitle(R.string.search_history);
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu,inflater);
+        inflater.inflate(R.menu.history_list_fragment,menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.delete_all:
+                mBrowserLab.removeAllHistory();
+                updateUI();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+
+    }
+
+    private String dateFormatted(Date date, String formatPattern){
+        SimpleDateFormat format = new SimpleDateFormat(formatPattern);
+
+        return  format.format(date);
+
+    }
 }
 
 
