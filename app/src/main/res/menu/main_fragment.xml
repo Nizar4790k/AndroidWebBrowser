@@ -9,7 +9,7 @@
         android:id="@+id/reload"
         android:title="@string/reload_button"
         android:icon="@drawable/ic_reload"
-        app:showAsAction="ifRoom"
+        app:showAsAction="ifRoom|withText"
 
         />
 
@@ -17,7 +17,7 @@
         android:id="@+id/add_or_remove_favorites"
         android:title=""
         android:icon="@drawable/ic_favorite_on"
-        app:showAsAction="ifRoom"
+        app:showAsAction="ifRoom|withText"
 
         />
 
@@ -26,7 +26,7 @@
         android:id="@+id/home"
         android:title="@string/home_button"
         android:icon="@drawable/ic_home"
-        app:showAsAction="ifRoom"
+        app:showAsAction="ifRoom|withText"
 
         />
 
@@ -37,7 +37,7 @@
         android:id="@+id/forward"
         android:title="@string/forward_button"
         android:icon="@drawable/ic_forward"
-        app:showAsAction="ifRoom"
+        app:showAsAction="ifRoom|withText"
 
         />
 
@@ -45,7 +45,7 @@
         android:id="@+id/favorite_list"
         android:title="@string/favorites_list"
 
-        app:showAsAction="ifRoom"
+        app:showAsAction="ifRoom|withText"
 
         />
 
@@ -58,7 +58,7 @@
         android:id="@+id/history"
         android:title="@string/history_button"
         android:icon="@drawable/ic_history"
-        app:showAsAction="ifRoom"
+        app:showAsAction="ifRoom|withText"
 
         />
 
@@ -66,7 +66,7 @@
         android:id="@+id/share"
         android:title="@string/share_button"
         android:icon="@drawable/ic_share"
-        app:showAsAction="ifRoom"
+        app:showAsAction="ifRoom|withText"
 
         />
 

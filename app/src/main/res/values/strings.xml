@@ -11,6 +11,6 @@
     <string name="empty_history">The search history is empty</string>
     <string name="search_history">Search History</string>
     <string name="share_app">Choose an option:</string>
-
+    <string name="delete_all">Delete all</string>
 
 </resources>

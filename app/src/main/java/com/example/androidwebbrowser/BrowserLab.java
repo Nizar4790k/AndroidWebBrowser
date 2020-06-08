@@ -161,6 +161,10 @@ public class BrowserLab {
 
     }
 
+    public void removeAllFavorites(){
+        mDatabase.delete(BrowserDbSchema.FavoriteTable.NAME,null,null);
+    }
+
     public void removeHistoryItem(WebBrowserHistoryItem f){
 
 

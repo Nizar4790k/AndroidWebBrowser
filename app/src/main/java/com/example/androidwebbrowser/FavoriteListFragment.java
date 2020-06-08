@@ -3,6 +3,9 @@ package com.example.androidwebbrowser;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -27,6 +30,7 @@ public class FavoriteListFragment extends Fragment {
 
     private RecyclerView mFavoriteRecyclerView;
     private FavoriteAdapter mFavoriteAdapter;
+    private BrowserLab mBrowserLab;
 
     @Nullable
     @Override
@@ -44,6 +48,9 @@ public class FavoriteListFragment extends Fragment {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         setActionBar(toolbar);
         updateUI();
+
+        mBrowserLab = BrowserLab.get(getContext());
+
 
 
 
@@ -208,10 +215,34 @@ public class FavoriteListFragment extends Fragment {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setTitle(R.string.favorites_list);
+
     }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu,inflater);
+        inflater.inflate(R.menu.favorite_list_fragment,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.delete_all:
+
+                mBrowserLab.removeAllFavorites();
+                updateUI();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+
+        }
 
 
     }
+}
 
 
 

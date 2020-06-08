@@ -73,6 +73,7 @@ public class MainFragment extends Fragment {
         ActionBar actionBar = activity.getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
 
 
         mWebView = view.findViewById(R.id.web_view);
