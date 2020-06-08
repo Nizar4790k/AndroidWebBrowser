@@ -1,6 +1,7 @@
 package com.example.androidwebbrowser;
 
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +35,8 @@ public class FavoriteListFragment extends Fragment {
 
          mFavoriteRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
          mFavoriteRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+         mFavoriteRecyclerView.addItemDecoration(new SimpleItemDecorator(15));
+
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallBack());
         itemTouchHelper.attachToRecyclerView(mFavoriteRecyclerView);
@@ -146,7 +150,10 @@ public class FavoriteListFragment extends Fragment {
         public void bind (WebBrowserHistoryItem webBrowserHistoryItem){
             mWebBrowserHistoryItem = webBrowserHistoryItem;
             mTvTitle.setText(webBrowserHistoryItem.getTitle());
-            mTvUrl.setText(webBrowserHistoryItem.getUrl());
+
+            String htmlString = "<u>"+webBrowserHistoryItem.getUrl()+"</u>";
+
+            mTvUrl.setText(Html.fromHtml(htmlString));
 
         }
 

@@ -19,10 +19,12 @@
             android:id="@+id/edit_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="text"
             android:imeOptions="actionGo"
+            android:inputType="text"
+            android:background="@android:color/transparent"
+            android:visibility="visible"
 
-            android:visibility="visible" />
+            />
 
 
 
