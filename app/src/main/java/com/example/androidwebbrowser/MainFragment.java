@@ -1,5 +1,6 @@
 package com.example.androidwebbrowser;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ShareCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.androidwebbrowser.models.WebBrowserHistoryItem;
@@ -42,6 +44,8 @@ public class MainFragment extends Fragment {
     private BrowserLab mBrowserLab;
     private MenuItem mFavoriteItem;
     private Menu mMenu;
+
+
 
     @Nullable
     @Override
@@ -157,7 +161,10 @@ public class MainFragment extends Fragment {
                  intent = new Intent(getContext(),HistoryListActivity.class);
                 startActivity(intent);
 
+                return true;
 
+            case R.id.share:
+                shareUrl(mWebView.getUrl());
                 return true;
 
             default:
@@ -167,6 +174,19 @@ public class MainFragment extends Fragment {
 
 
 
+    }
+
+    private void shareUrl(String url){
+
+        Activity activity = getActivity();
+        Intent i = ShareCompat.IntentBuilder.from(activity)
+                .setType("text/plain").getIntent();
+
+        i.putExtra(Intent.EXTRA_TEXT,url);
+        i = Intent.createChooser(i,getString(R.string.share_app));
+        if(i.resolveActivity(activity.getPackageManager())!=null){
+            startActivity(i);
+        }
     }
 
     private class MyBrowser extends WebViewClient {
