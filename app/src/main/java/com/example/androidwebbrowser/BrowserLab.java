@@ -37,6 +37,11 @@ public class BrowserLab {
         mDatabase.insert(BrowserDbSchema.FavoriteTable.NAME,null,values);
     }
 
+    public void addHistoryItem(WebBrowserHistoryItem webBrowserHistoryItem){
+        ContentValues values = getHistoryContentValues(webBrowserHistoryItem);
+        mDatabase.insert(BrowserDbSchema.HistoryTable.NAME,null,values);
+    }
+
 
     private static ContentValues getFavoriteContentValues(WebBrowserHistoryItem webBrowserHistoryItem){
         ContentValues values= new ContentValues();
@@ -46,6 +51,16 @@ public class BrowserLab {
         return values;
     }
 
+    private static ContentValues getHistoryContentValues(WebBrowserHistoryItem webBrowserHistoryItem){
+        ContentValues values = new ContentValues();
+        values.put(BrowserDbSchema.HistoryTable.Cols.DATE,webBrowserHistoryItem.getDate().getTime());
+        values.put(BrowserDbSchema.HistoryTable.Cols.UUID,webBrowserHistoryItem.getUUID().toString());
+        values.put(BrowserDbSchema.HistoryTable.Cols.URL,webBrowserHistoryItem.getUrl());
+        values.put(BrowserDbSchema.HistoryTable.Cols.TITLE,webBrowserHistoryItem.getTitle());
+
+        return values;
+
+    }
 
 
     public  List<WebBrowserHistoryItem> getFavorites(){
@@ -70,6 +85,31 @@ public class BrowserLab {
 
         return webBrowserHistoryItems;
     }
+
+
+    public  List<WebBrowserHistoryItem> getHisoryItems(){
+
+        List<WebBrowserHistoryItem> webBrowserHistoryItems = new ArrayList<>();
+
+        BrowserCursorWrapper cursor = queryHistoryItems(null,null);
+
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()){
+                webBrowserHistoryItems.add(cursor.getHistoryItem());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+
+
+
+
+
+        return webBrowserHistoryItems;
+    }
+
 
     public boolean isFavorite(String url){
 
@@ -97,8 +137,21 @@ public class BrowserLab {
         return new BrowserCursorWrapper(cursor);
     }
 
-    public void removeFavorite(WebBrowserHistoryItem f){
+    private BrowserCursorWrapper queryHistoryItems(String whereClause, String[] whereArgs) {
+        Cursor cursor = mDatabase.query(
+                BrowserDbSchema.HistoryTable.NAME,
+                null, // columns - null selects all columns
+                whereClause,
+                whereArgs,
+                null, // groupBy
+                null, // having
+                BrowserDbSchema.HistoryTable.Cols.DATE+" DESC " // orderBy
+        );
+        return new BrowserCursorWrapper(cursor);
+    }
 
+
+    public void removeFavorite(WebBrowserHistoryItem f){
 
 
         mDatabase.delete(BrowserDbSchema.FavoriteTable.NAME,
@@ -107,6 +160,17 @@ public class BrowserLab {
 
 
     }
+
+    public void removeHistoryItem(WebBrowserHistoryItem f){
+
+
+        mDatabase.delete(BrowserDbSchema.HistoryTable.NAME,
+                BrowserDbSchema.HistoryTable.Cols.UUID+" = ?",
+                new String[]{f.getUUID().toString()});
+
+
+    }
+
 
 
 }

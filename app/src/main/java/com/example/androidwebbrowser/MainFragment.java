@@ -3,6 +3,7 @@ package com.example.androidwebbrowser;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.example.androidwebbrowser.models.WebBrowserHistoryItem;
+
+import java.util.Date;
 
 public class MainFragment extends Fragment {
 
@@ -113,6 +116,8 @@ public class MainFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
+        Intent intent;
+
         switch (item.getItemId()){
             case R.id.home:
                 goHome();
@@ -143,7 +148,13 @@ public class MainFragment extends Fragment {
                 return true;
 
             case R.id.favorite_list:
-                Intent intent = new Intent(getContext(),FavoriteListActivity.class);
+                intent = new Intent(getContext(),FavoriteListActivity.class);
+                startActivity(intent);
+
+                return true;
+
+            case R.id.history:
+                 intent = new Intent(getContext(),HistoryListActivity.class);
                 startActivity(intent);
 
 
@@ -186,6 +197,13 @@ public class MainFragment extends Fragment {
             mProgressBar.setVisibility(View.GONE);
 
             checkFavorite(url);
+
+            WebHistoryItem item = mWebView.copyBackForwardList().getCurrentItem();
+
+            mBrowserLab.addHistoryItem(new WebBrowserHistoryItem(
+                    item.getUrl(),
+                    item.getTitle(),
+                    new Date()));
 
 
 
