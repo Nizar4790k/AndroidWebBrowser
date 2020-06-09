@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebHistoryItem;
 import android.webkit.WebSettings;
@@ -235,6 +236,7 @@ public class MainFragment extends Fragment {
             mProgressBar.setVisibility(View.VISIBLE);
 
             mIsFavorite = mBrowserLab.isFavorite(url);
+            hideKeyboardFrom(getContext(),mEditText);
 
 
         }
@@ -334,5 +336,9 @@ public class MainFragment extends Fragment {
     }
 
 
+    private static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
 }
