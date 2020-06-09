@@ -144,7 +144,7 @@ public class HistoryListFragment extends Fragment {
         }
     }
 
-    private class HistoryHolder extends RecyclerView.ViewHolder{
+    private class HistoryHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 
         private TextView mTvTitle;
@@ -159,6 +159,7 @@ public class HistoryListFragment extends Fragment {
             mTvUrl= itemView.findViewById(R.id.text_view_url);
             mTvTitle = itemView.findViewById(R.id.text_view_title);
             mTvDate=itemView.findViewById(R.id.text_view_date);
+            itemView.setOnClickListener(this);
 
         }
 
@@ -183,10 +184,12 @@ public class HistoryListFragment extends Fragment {
         }
 
 
+        @Override
+        public void onClick(View v) {
 
-
-
-
+            MainFragment.changeUrl(mWebBrowserHistoryItem.getUrl());
+            getActivity().finish();
+        }
     }
 
 

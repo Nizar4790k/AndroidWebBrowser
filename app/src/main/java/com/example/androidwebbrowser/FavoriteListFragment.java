@@ -1,7 +1,9 @@
 package com.example.androidwebbrowser;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -137,12 +139,13 @@ public class FavoriteListFragment extends Fragment {
         }
     }
 
-    private class  FavoriteHolder extends RecyclerView.ViewHolder{
+    private class  FavoriteHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
 
         private TextView mTvTitle;
         private TextView mTvUrl;
         private WebBrowserHistoryItem mWebBrowserHistoryItem;
+
 
         public FavoriteHolder(LayoutInflater inflater, ViewGroup parent){
             super(inflater.inflate(R.layout.favorite_list_item,parent,false));
@@ -150,7 +153,7 @@ public class FavoriteListFragment extends Fragment {
 
             mTvUrl= itemView.findViewById(R.id.text_view_url);
             mTvTitle = itemView.findViewById(R.id.text_view_title);
-
+            itemView.setOnClickListener(this);
         }
 
 
@@ -165,10 +168,12 @@ public class FavoriteListFragment extends Fragment {
         }
 
 
+        @Override
+        public void onClick(View v) {
 
-
-
-
+            MainFragment.changeUrl(mWebBrowserHistoryItem.getUrl());
+            getActivity().finish();
+        }
     }
 
 

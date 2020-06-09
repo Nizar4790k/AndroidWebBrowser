@@ -1,10 +1,10 @@
 package com.example.androidwebbrowser;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,13 +40,16 @@ public class MainFragment extends Fragment {
 
 
     private Toolbar mToolbar;
-    private WebView mWebView;
+    private static WebView sWebView;
     private EditText mEditText;
     private ProgressBar mProgressBar;
     private boolean mIsFavorite;
     private BrowserLab mBrowserLab;
     private MenuItem mFavoriteItem;
     private Menu mMenu;
+
+    private static String EXTRA_URL="com.example.androidwebbrowser.MainFragment.URL";
+    private static String STATE="com.example.androidwebbrowser.MainFragment.STATE";
 
 
 
@@ -67,6 +70,8 @@ public class MainFragment extends Fragment {
 
         MainActivity activity = (MainActivity) getActivity();
 
+
+
         activity.setSupportActionBar(mToolbar);
 
 
@@ -76,10 +81,12 @@ public class MainFragment extends Fragment {
         actionBar.setDisplayShowTitleEnabled(false);
 
 
-        mWebView = view.findViewById(R.id.web_view);
-        mWebView.setWebViewClient(new MyBrowser());
 
-        mWebView.setWebChromeClient(new WebChromeClient(){
+
+        sWebView = view.findViewById(R.id.web_view);
+        sWebView.setWebViewClient(new MyBrowser());
+
+        sWebView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
@@ -87,18 +94,23 @@ public class MainFragment extends Fragment {
             }
         });
 
-        WebSettings webSettings = mWebView.getSettings();
+        WebSettings webSettings = sWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        mWebView.loadUrl("https://www.google.com");
+
+        sWebView.loadUrl("https://www.google.com");
+
+
+
+
 
         mEditText = view.findViewById(R.id.edit_text);
-        mEditText.setText(mWebView.getUrl());
+        mEditText.setText(sWebView.getUrl());
 
         mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId== EditorInfo.IME_ACTION_GO){
-                    mWebView.loadUrl(mEditText.getText().toString());
+                    sWebView.loadUrl(mEditText.getText().toString());
                     return  true;
                 }
 
@@ -144,14 +156,14 @@ public class MainFragment extends Fragment {
 
                 return true;
             case R.id.reload:
-            mWebView.reload();
+            sWebView.reload();
             return  true;
             case R.id.forward:
                 goForward();
                 return true;
             case R.id.add_or_remove_favorites:
 
-                WebHistoryItem webHistoryItem = mWebView.copyBackForwardList().getCurrentItem();
+                WebHistoryItem webHistoryItem = sWebView.copyBackForwardList().getCurrentItem();
 
                 if(!mIsFavorite){
                     mBrowserLab.addFavorite(new WebBrowserHistoryItem(
@@ -160,7 +172,7 @@ public class MainFragment extends Fragment {
                     mIsFavorite=true;
                     mFavoriteItem.setIcon(R.drawable.ic_favorite_on);
                 }else{
-                    mBrowserLab.removeFavorite(new WebBrowserHistoryItem(mWebView.getUrl()));
+                    mBrowserLab.removeFavorite(new WebBrowserHistoryItem(sWebView.getUrl()));
                     mFavoriteItem.setIcon(R.drawable.ic_favorite_off);
                     mIsFavorite=false;
                 }
@@ -180,7 +192,7 @@ public class MainFragment extends Fragment {
                 return true;
 
             case R.id.share:
-                shareUrl(mWebView.getUrl());
+                shareUrl(sWebView.getUrl());
                 return true;
 
             default:
@@ -234,7 +246,7 @@ public class MainFragment extends Fragment {
 
             checkFavorite(url);
 
-            WebHistoryItem item = mWebView.copyBackForwardList().getCurrentItem();
+            WebHistoryItem item = sWebView.copyBackForwardList().getCurrentItem();
 
             mBrowserLab.addHistoryItem(new WebBrowserHistoryItem(
                     item.getUrl(),
@@ -248,8 +260,8 @@ public class MainFragment extends Fragment {
     }
 
     void goBack(){
-        if (mWebView.canGoBack()){
-            mWebView.goBack();
+        if (sWebView.canGoBack()){
+            sWebView.goBack();
 
         }
 
@@ -259,13 +271,13 @@ public class MainFragment extends Fragment {
 
 
     private void goHome(){
-        mWebView.loadUrl("https://www.google.com");
+        sWebView.loadUrl("https://www.google.com");
 
     }
 
     private void goForward(){
-        if(mWebView.canGoForward()){
-            mWebView.goForward();
+        if(sWebView.canGoForward()){
+            sWebView.goForward();
 
 
         }
@@ -277,7 +289,7 @@ public class MainFragment extends Fragment {
         super.onResume();
 
         if(mFavoriteItem!=null){
-            checkFavorite(mWebView.getUrl());
+            checkFavorite(sWebView.getUrl());
 
         }
 
@@ -297,4 +309,28 @@ public class MainFragment extends Fragment {
             mFavoriteItem.setIcon(R.drawable.ic_favorite_off);
         }
     }
+
+    public static Intent getIntent(Context packageContext, String url){
+
+        Bundle state = new Bundle();
+        state.putString(EXTRA_URL,url);
+
+        sWebView.saveState(state);
+
+
+
+        Intent intent = new Intent(packageContext,MainActivity.class);
+
+
+        intent.putExtra(STATE,state);
+
+        return intent;
+    }
+
+    static void changeUrl(String url){
+        sWebView.loadUrl(url);
+    }
+
+
+
 }
