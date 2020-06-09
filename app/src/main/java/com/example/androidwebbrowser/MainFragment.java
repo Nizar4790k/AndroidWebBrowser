@@ -329,6 +329,8 @@ public class MainFragment extends Fragment {
 
     static void changeUrl(String url){
         sWebView.loadUrl(url);
+
+
     }
 
 

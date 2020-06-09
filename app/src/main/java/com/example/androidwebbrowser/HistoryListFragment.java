@@ -188,6 +188,7 @@ public class HistoryListFragment extends Fragment {
         public void onClick(View v) {
 
             MainFragment.changeUrl(mWebBrowserHistoryItem.getUrl());
+
             getActivity().finish();
         }
     }
